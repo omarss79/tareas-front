@@ -1,5 +1,10 @@
-import {useState, useEffect} from 'react'
-import {FaUser} from 'react-icons/fa'
+import { useState, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import { FaUser } from 'react-icons/fa'
+import { register, reset } from '../features/auth/authSlice'
+import Spinner from '../components/Spinner'
 
 const Register = () => {
 
@@ -10,68 +15,100 @@ const Register = () => {
         password2: ''
     })
 
-    const {name, email, password, password2} = formData
+    const { name, email, password, password2 } = formData
 
-    const onChange = () => {
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+
+    const { user, isLoading, isError, isSuccess, message } = useSelector((state) => state.auth)
+
+    useEffect(() => {
+
+        if (isError) {
+            toast.error(message)
+        }
+
+        if (isSuccess) {
+            navigate('/login')
+        }
+
+        dispatch(reset())
+
+
+    }, [user, isError, isSuccess, message, navigate, dispatch])
+
+    const onChange = (e) => {
         setFormData((prevState) => ({
             ...prevState,
             [e.target.name]: e.target.value
-
         }))
     }
 
     const onSubmit = (e) => {
         e.preventDefault()
+
+        if (password !== password2) {
+            toast.error('Las contraseñas con coinciden')
+        } else {
+            const userData = { name, email, password }
+            dispatch(register(userData))
+        }
+
     }
+
+    if (isLoading) {
+        return <Spinner />
+    }
+
     return (
         <>
             <section className='heading'>
                 <h4>
-                    <FaUser /> Registro
+                    <FaUser /> Registrar
                 </h4>
-                <p>Por favor crea tu cuenta</p>
+                <p>Por favor crea una cuenta</p>
             </section>
-            <section className='form'>
+            <section className="form">
                 <form onSubmit={onSubmit}>
                     <div className="form-group">
-                        <input 
-                            className="form-control" 
-                            type="text" 
-                            name="name" 
+                        <input
+                            className='form-control'
+                            type="text"
+                            name="name"
                             id="name"
-                            value={name} 
-                            placeholder="Teclea un nombre" 
-                            onChange={onChange}  />
+                            value={name}
+                            placeholder='Teclea tu nombre'
+                            onChange={onChange} />
                     </div>
                     <div className="form-group">
-                        <input 
-                            className="form-control" 
-                            type="text" 
-                            name="email" 
+                        <input
+                            className='form-control'
+                            type="email"
+                            name="email"
                             id="email"
-                            value={email} 
-                            placeholder="Teclea un email" 
-                            onChange={onChange}  />
+                            value={email}
+                            placeholder='Teclea tu email'
+                            onChange={onChange} />
                     </div>
                     <div className="form-group">
-                        <input 
-                            className="form-control" 
-                            type="password" 
-                            name="password" 
+                        <input
+                            className='form-control'
+                            type="password"
+                            name="password"
                             id="password"
-                            value={password} 
-                            placeholder="Teclea un password" 
-                            onChange={onChange}  />
+                            value={password}
+                            placeholder='Teclea tu password'
+                            onChange={onChange} />
                     </div>
                     <div className="form-group">
-                        <input 
-                            className="form-control" 
-                            type="password" 
-                            name="password2" 
+                        <input
+                            className='form-control'
+                            type="password"
+                            name="password2"
                             id="password2"
-                            value={password2} 
-                            placeholder="Confirma tu password" 
-                            onChange={onChange}  />
+                            value={password2}
+                            placeholder='Confirma tu password'
+                            onChange={onChange} />
                     </div>
                     <div className="form-group">
                         <button type="submit" className='btn btn-block'>Submit</button>
