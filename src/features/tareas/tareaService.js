@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_URL = 'https://zany-fly-baseball-cap.cyclic.app/'
+const API_URL = 'https://zany-fly-baseball-cap.cyclic.app/api/tareas/'
 //const API_URL = 'http://localhost:5000/api/tareas/'
 
 //crear una nueva tarea
