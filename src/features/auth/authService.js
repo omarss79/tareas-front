@@ -1,12 +1,12 @@
 import axios from 'axios'
 
-// const API_URL = 'https://good-tick-jodhpurs.cyclic.app/api/users/'
+//const API_URL = 'https://good-tick-jodhpurs.cyclic.app/api/users/'
 const API_URL = 'http://localhost:5000/api/users/'
 
 //Registrar un usuario
 const register = async (userData) => {
 
-    const response = await axios.post(API_URL, userData)
+    const response = await axios.post(API_URL + 'register', userData)
 
     return response.data
 }
